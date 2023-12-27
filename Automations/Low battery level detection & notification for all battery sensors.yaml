@@ -1,0 +1,17 @@
+alias: Low battery level detection & notification for all battery sensors
+description: ""
+use_blueprint:
+  path: sbyx/low-battery-level-detection-notification-for-all-battery-sensors.yaml
+  input:
+    threshold: 15
+    exclude:
+      entity_id:
+        - sensor.batterij_sensoren
+    actions:
+      - service: notify.mobile_app_iphone_van_fleur
+        data:
+          message: Batterij sensor is bijna leeg
+      - service: notify.mobile_app_iphone_van_fleur
+        data:
+          message: Batterij sensor is bijna leeg
+    day: 7
