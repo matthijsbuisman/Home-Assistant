@@ -1,0 +1,53 @@
+alias: Motion-light slaapkamer
+description: ""
+trigger:
+  - type: motion
+    platform: device
+    device_id: dca3ebd4a90695a608ea9a5402cbb7bc
+    entity_id: d8a65a72adc94a411df97899b9521188
+    domain: binary_sensor
+    id: Motion detected
+  - type: no_motion
+    platform: device
+    device_id: dca3ebd4a90695a608ea9a5402cbb7bc
+    entity_id: d8a65a72adc94a411df97899b9521188
+    domain: binary_sensor
+    id: Motion stopped
+condition: []
+action:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id:
+              - Motion detected
+          - condition: sun
+            after: sunset
+          - condition: time
+            before: "21:30:00"
+        sequence:
+          - type: turn_on
+            device_id: 76e044d807f549f31c91d9a37ee294eb
+            entity_id: e4dca38dab7334701b9493a7eef150db
+            domain: switch
+      - conditions:
+          - condition: trigger
+            id:
+              - Motion stopped
+        sequence:
+          - type: turn_off
+            device_id: 76e044d807f549f31c91d9a37ee294eb
+            entity_id: e4dca38dab7334701b9493a7eef150db
+            domain: switch
+      - conditions:
+          - condition: trigger
+            id:
+              - Motion detected
+          - condition: time
+            after: "21:30:00"
+            before: "22:00:00"
+        sequence:
+          - type: turn_on
+            device_id: 999ffc9b7c11eaa884b98454bdb9b248
+            entity_id: a356bc64b65e1b4a0a64195f798dde03
+            domain: switch
+mode: single
