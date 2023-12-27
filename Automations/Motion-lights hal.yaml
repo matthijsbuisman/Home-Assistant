@@ -1,0 +1,105 @@
+alias: Motion-lights hal
+description: Gebaseerd op zonsop- en ondergang
+trigger:
+  - type: motion
+    platform: device
+    device_id: 58a50495c62ed34059897cd651530945
+    entity_id: 7e6e6c77e127394e7217afbf203238b6
+    domain: binary_sensor
+    id: Motion detected
+  - type: no_motion
+    platform: device
+    device_id: 58a50495c62ed34059897cd651530945
+    entity_id: 7e6e6c77e127394e7217afbf203238b6
+    domain: binary_sensor
+    id: Motion stopped
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 20
+condition: []
+action:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id:
+              - Motion detected
+          - condition: state
+            entity_id: sun.sun
+            state: below_horizon
+          - condition: and
+            conditions:
+              - condition: time
+                after: "16:00:00"
+                before: "23:00:00"
+        sequence:
+          - service: light.turn_on
+            target:
+              entity_id: light.lampen_hal
+            data:
+              brightness_pct: 55
+      - conditions:
+          - condition: trigger
+            id:
+              - Motion stopped
+        sequence:
+          - service: light.turn_off
+            target:
+              entity_id: light.lampen_hal
+            data: {}
+      - conditions:
+          - condition: trigger
+            id:
+              - Motion detected
+          - condition: state
+            entity_id: sun.sun
+            state: below_horizon
+          - condition: and
+            conditions:
+              - condition: time
+                after: "06:25:00"
+                weekday:
+                  - mon
+                  - tue
+                  - wed
+                  - thu
+                  - fri
+                before: "09:00:00"
+        sequence:
+          - service: light.turn_on
+            data:
+              brightness_pct: 1
+            target:
+              entity_id: light.hue_white_lamp_1_3
+      - conditions:
+          - condition: trigger
+            id:
+              - Motion detected
+          - condition: time
+            after: "23:00:00"
+            before: "01:00:00"
+            weekday:
+              - fri
+              - sat
+              - sun
+        sequence:
+          - service: light.turn_on
+            target:
+              entity_id: light.hue_white_lamp_1_3
+            data: {}
+      - conditions:
+          - condition: trigger
+            id:
+              - Motion detected
+          - condition: numeric_state
+            entity_id: sensor.motion_hal_licht
+            below: 8
+          - condition: time
+            after: "11:00:00"
+            before: "16:45:00"
+        sequence:
+          - service: light.turn_on
+            target:
+              area_id: hal
+            data: {}
+mode: single
