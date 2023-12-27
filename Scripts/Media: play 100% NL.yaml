@@ -1,0 +1,12 @@
+alias: "Media: Play 100% NL"
+sequence:
+  - service: media_player.play_media
+    target:
+      device_id:
+        - bf95a24944350c43f307e08e4b4ed465
+        - 12c27fd464189ea8a982c7f6717bc78f
+    data:
+      media_content_id: media-source://radio_browser/960f36b5-0601-11e8-ae97-52543be04c81
+      enqueue: replace
+mode: single
+icon: mdi:play
