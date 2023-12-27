@@ -1,0 +1,99 @@
+alias: Lampen woonkamer aan/uit
+description: ""
+trigger:
+  - platform: sun
+    event: sunset
+    offset: "- 00:15:00"
+    id: Zon gaat onder
+  - type: opened
+    platform: device
+    device_id: b9bff415c0827f65e3a3723d11b03c16
+    entity_id: c642e357c2ccd1397779571c668eabf2
+    domain: binary_sensor
+    id: Deur wordt geopend
+  - type: motion
+    platform: device
+    device_id: dca3ebd4a90695a608ea9a5402cbb7bc
+    entity_id: d8a65a72adc94a411df97899b9521188
+    domain: binary_sensor
+    id: Motion slaapkamer
+condition:
+  - condition: numeric_state
+    entity_id: zone.home
+    above: 0
+action:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id:
+              - Zon gaat onder
+          - condition: state
+            entity_id: person.matthijs
+            state: home
+          - condition: or
+            conditions:
+              - condition: state
+                entity_id: person.fleur
+                state: home
+        sequence:
+          - service: light.turn_on
+            target:
+              area_id: woonkamer
+            data: {}
+      - conditions:
+          - condition: trigger
+            id:
+              - Deur wordt geopend
+          - condition: time
+            before: "21:21:00"
+            after: "16:00:00"
+          - condition: state
+            entity_id: sun.sun
+            state: below_horizon
+        sequence:
+          - service: light.turn_on
+            target:
+              area_id: woonkamer
+            data: {}
+      - conditions:
+          - condition: trigger
+            id:
+              - Motion slaapkamer
+          - condition: time
+            after: "21:45:00"
+            weekday:
+              - sun
+              - mon
+              - tue
+              - wed
+              - thu
+            before: "09:00:00"
+        sequence:
+          - service: light.turn_off
+            target:
+              area_id: woonkamer
+            data: {}
+          - type: turn_off
+            device_id: 4253b06aa7efdb084156487f007089d2
+            entity_id: 7188ec342a82813923a023e9bbbe9f26
+            domain: switch
+      - conditions:
+          - condition: trigger
+            id:
+              - Motion slaapkamer
+          - condition: time
+            after: "00:00:00"
+            before: "05:00:00"
+            weekday:
+              - fri
+              - sat
+        sequence:
+          - service: light.turn_off
+            target:
+              area_id: woonkamer
+            data: {}
+          - type: turn_off
+            device_id: 4253b06aa7efdb084156487f007089d2
+            entity_id: 7188ec342a82813923a023e9bbbe9f26
+            domain: switch
+mode: single
