@@ -1,0 +1,21 @@
+type: custom:mini-media-player
+entity: media_player.sonos_keuken
+volume_stateless: false
+toggle_power: true
+artwork: full-cover
+source: full
+sound_mode: full
+info: scroll
+background: /local/Radio/icon_sonos.jpg
+shortcuts:
+  columns: 3
+  buttons:
+    - type: script
+      cover: /local/Radio/icon_538.jpg
+      id: script.media_play_radio_538
+    - type: script
+      cover: /local/Radio/icon_skyradio.png
+      id: script.media_play_sky_radio
+    - type: script
+      cover: /local/Radio/icon_100nl.jpeg
+      id: script.media_play_100_nl
