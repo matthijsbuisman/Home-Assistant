@@ -1,0 +1,342 @@
+kiosk_mode:
+hide_header: true
+views:
+  - title: Home
+    cards:
+      - type: custom:mushroom-chips-card
+        chips:
+          - type: weather
+            entity: weather.forecast_thuis
+            show_conditions: true
+            show_temperature: true
+          - type: entity
+            entity: sensor.count_lights_when_on
+            name: Lights
+            icon: mdi:lightbulb
+            icon_color: amber
+            use_entity_picture: false
+        alignment: center
+      - type: custom:mushroom-template-card
+        primary: |-
+          {% set time = now().hour %}
+          {% if (time >= 18) %}
+           Goedenavond {{user}}!
+          {% elif (time >= 12) %}
+           Goedemiddag {{user}}!
+          {% elif (time >= 4) %}
+           Goedemorgen {{user}}!
+          {% else %}
+           Hallo {{user}}
+          {% endif %}
+        secondary: ''
+        icon: mdi:home
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-template-card
+            primary: Thuis
+            secondary: ''
+            icon: mdi:home
+            icon_color: blue
+            tap_action:
+              action: navigate
+              navigation_path: thuis
+            layout: vertical
+          - type: custom:mushroom-template-card
+            primary: Lampen
+            secondary: ''
+            icon: mdi:lightbulb
+            layout: vertical
+            icon_color: amber
+            tap_action:
+              action: navigate
+              navigation_path: lampen
+          - type: custom:mushroom-template-card
+            primary: Motion
+            secondary: ''
+            icon: mdi:motion-sensor
+            layout: vertical
+            tap_action:
+              action: navigate
+              navigation_path: motion
+            icon_color: red
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-person-card
+            entity: person.matthijs
+            name: Matthijs
+          - type: custom:mushroom-person-card
+            entity: person.fleur
+            name: Fleur
+      - type: custom:mushroom-title-card
+        title: Ruimtes
+        alignment: center
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-template-card
+            primary: Woonkamer
+            secondary: '{{ states(''sensor.temperatuur_sensor_temperatuur'') }}°C'
+            icon: mdi:sofa
+            entity: light.lampen_woonkamer
+            icon_color: |-
+              {% if is_state('light.lampen_woonkamer','on') %}
+               amber
+              {% endif %}
+            tap_action:
+              action: navigate
+              navigation_path: woonkamer
+            hold_action:
+              action: toggle
+          - type: custom:mushroom-light-card
+            entity: light.hal
+            name: Hal
+            icon: mdi:mirror
+            show_brightness_control: false
+            icon_color: amber
+            use_light_color: false
+            tap_action:
+              action: navigate
+              navigation_path: hal
+            hold_action:
+              action: toggle
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: light.toilet
+            icon: mdi:paper-roll
+            icon_color: amber
+            tap_action:
+              action: navigate
+              navigation_path: toilet
+            hold_action:
+              action: toggle
+          - type: custom:mushroom-entity-card
+            entity: light.eetkamer
+            name: Eetkamer
+            icon_color: amber
+            icon: mdi:food
+            tap_action:
+              action: navigate
+              navigation_path: eetkamer
+            hold_action:
+              action: toggle
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: light.lights_slaapkamer
+            name: Slaapkamer
+            icon: mdi:bed
+            tap_action:
+              action: navigate
+              navigation_path: slaapkamer
+            hold_action:
+              action: toggle
+            icon_color: amber
+      - type: custom:mini-media-player
+        entity: media_player.sonos_keuken
+        volume_stateless: false
+        toggle_power: true
+        artwork: full-cover
+        source: full
+        sound_mode: full
+        info: scroll
+        background: /local/Radio/icon_sonos.jpg
+        shortcuts:
+          columns: 3
+          buttons:
+            - type: script
+              cover: /local/Radio/icon_538.jpg
+              id: script.media_play_radio_538
+            - type: script
+              cover: /local/Radio/icon_skyradio.png
+              id: script.media_play_sky_radio
+            - type: script
+              cover: /local/Radio/icon_100nl.jpeg
+              id: script.media_play_100_nl
+  - title: woonkamer
+    path: woonkamer
+    icon: ''
+    badges: []
+    cards:
+      - type: custom:mushroom-chips-card
+        chips:
+          - type: back
+      - type: horizontal-stack
+        cards:
+          - graph: line
+            type: sensor
+            detail: 1
+            entity: sensor.temperatuur_sensor_temperatuur
+            name: Temperatuur
+          - graph: line
+            type: sensor
+            detail: 1
+            entity: sensor.temperatuur_sensor_luchtvochtigheid
+            name: Luchtvochtigheid
+      - type: custom:mushroom-title-card
+        title: Apparaten
+        alignment: center
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-light-card
+            entity: light.woonkamer
+            use_light_color: true
+            show_brightness_control: true
+            show_color_temp_control: true
+            show_color_control: true
+            icon: mdi:ceiling-light
+            tap_action:
+              action: toggle
+          - type: custom:mushroom-light-card
+            entity: light.lamp_naast_tv_schakelaar
+            layout: vertical
+            icon: mdi:floor-lamp-dual
+            show_brightness_control: false
+            use_light_color: false
+            tap_action:
+              action: toggle
+      - type: horizontal-stack
+        cards:
+          - type: custom:mini-media-player
+            entity: media_player.sonos_woonkamer
+            volume_stateless: false
+            toggle_power: true
+            group: false
+            artwork: cover
+            source: icon
+            sound_mode: full
+            info: short
+            replace_mute: false
+          - type: media-control
+            entity: media_player.woonkamer
+  - title: Hal
+    path: hal
+    badges: []
+    cards:
+      - type: custom:mushroom-chips-card
+        chips:
+          - type: back
+      - type: custom:mushroom-title-card
+        title: ''
+        alignment: center
+        subtitle: Lampen
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-light-card
+            entity: light.hue_white_lamp_1_2
+            name: Lamp 1
+            icon_color: amber
+            show_brightness_control: true
+            tap_action:
+              action: toggle
+          - type: custom:mushroom-light-card
+            entity: light.hue_white_lamp_1_3
+            name: Lamp 2
+            icon_color: amber
+            show_brightness_control: true
+            tap_action:
+              action: toggle
+      - type: custom:mushroom-light-card
+        entity: light.hue_white_lamp_1_4
+        name: Lamp 3
+        icon_color: amber
+        show_brightness_control: true
+      - type: custom:mushroom-title-card
+        title: ''
+        subtitle: Sensoren
+        alignment: center
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: binary_sensor.motion_hal_beweging
+            name: Beweging
+            icon_color: red
+          - type: custom:mushroom-entity-card
+            entity: binary_sensor.motion_hal_bezetting
+            name: Bezetting
+            icon_color: red
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: sensor.motion_hal_licht
+            icon_color: red
+            name: Lichtsterkte
+          - type: custom:mushroom-entity-card
+            entity: sensor.motion_hal_batterij
+            name: Batterij
+            icon_color: red
+  - title: Toilet
+    path: toilet
+    icon: ''
+    badges: []
+    cards:
+      - type: custom:mushroom-chips-card
+        chips:
+          - type: back
+      - type: custom:mushroom-title-card
+        title: ''
+        subtitle: Lamp
+        alignment: center
+      - type: custom:mushroom-light-card
+        entity: light.toilet
+        icon_color: amber
+        name: WC
+        icon: mdi:lightbulb
+        show_brightness_control: true
+      - type: custom:mushroom-title-card
+        title: ''
+        subtitle: Sensoren
+        alignment: center
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: binary_sensor.lumi_lumi_sensor_motion_aq2_beweging
+            icon_color: red
+            name: Beweging
+          - type: custom:mushroom-entity-card
+            entity: binary_sensor.motion_wc_bezetting
+            name: Bezetting
+            icon_color: red
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: sensor.motion_wc_licht
+            name: Lichtsterkte
+            icon_color: red
+          - type: custom:mushroom-entity-card
+            entity: sensor.lumi_lumi_sensor_motion_aq2_batterij
+            name: Batterij
+            icon_color: red
+  - title: Slaapkamer
+    path: slaapkamer
+    badges: []
+    cards:
+      - type: custom:mushroom-chips-card
+        chips:
+          - type: back
+      - type: custom:mushroom-title-card
+        title: ''
+        subtitle: Lampen
+        alignment: center
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-light-card
+            entity: light.slaapkamer_schakelaar_schakelaar
+            name: Spotjes
+            icon_color: amber
+          - type: custom:mushroom-light-card
+            entity: light.nachtlampje_schakelaar
+            name: Nachtlampje
+            icon_color: amber
+      - type: custom:mushroom-title-card
+        title: ''
+        subtitle: Sensoren
+        alignment: center
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: binary_sensor.tz1800_fcdjzz3s_ty0202_beweging
+            name: Beweging
+            icon_color: red
+          - type: custom:mushroom-entity-card
+            entity: sensor.tz1800_fcdjzz3s_ty0202_batterij
+            name: Batterij
