@@ -3,7 +3,7 @@ description: ""
 trigger:
   - platform: sun
     event: sunset
-    offset: "- 00:15:00"
+    offset: "- 00:20:00"
     id: Zon gaat onder
   - type: opened
     platform: device
@@ -27,29 +27,37 @@ action:
           - condition: trigger
             id:
               - Zon gaat onder
-          - condition: state
-            entity_id: person.matthijs
-            state: home
           - condition: or
             conditions:
               - condition: state
                 entity_id: person.fleur
                 state: home
+              - condition: state
+                entity_id: person.matthijs
+                state: home
         sequence:
           - service: light.turn_on
-            target:
-              area_id: woonkamer
             data: {}
+            target:
+              entity_id:
+                - light.lamp_naast_tv_schakelaar
+                - light.woonkamer
       - conditions:
           - condition: trigger
             id:
               - Deur wordt geopend
           - condition: time
             before: "21:21:00"
-            after: "16:00:00"
-          - condition: state
-            entity_id: sun.sun
-            state: below_horizon
+            after: "17:00:00"
+            weekday:
+              - sun
+              - mon
+              - tue
+              - wed
+              - thu
+          - condition: sun
+            after: sunset
+            after_offset: "-00:20:00"
         sequence:
           - service: light.turn_on
             target:
@@ -60,14 +68,14 @@ action:
             id:
               - Motion slaapkamer
           - condition: time
-            after: "21:45:00"
+            after: "22:05:00"
+            before: "09:00:00"
             weekday:
               - sun
               - mon
               - tue
               - wed
               - thu
-            before: "09:00:00"
         sequence:
           - service: light.turn_off
             target:
@@ -83,10 +91,10 @@ action:
               - Motion slaapkamer
           - condition: time
             after: "00:00:00"
-            before: "05:00:00"
+            before: "09:00:00"
             weekday:
-              - fri
               - sat
+              - sun
         sequence:
           - service: light.turn_off
             target:
@@ -96,4 +104,22 @@ action:
             device_id: 4253b06aa7efdb084156487f007089d2
             entity_id: 7188ec342a82813923a023e9bbbe9f26
             domain: switch
+      - conditions:
+          - condition: trigger
+            id:
+              - Deur wordt geopend
+          - condition: time
+            after: "16:00:00"
+            before: "23:00:00"
+            weekday:
+              - fri
+              - sat
+          - condition: state
+            entity_id: sun.sun
+            state: below_horizon
+        sequence:
+          - service: light.turn_on
+            target:
+              area_id: woonkamer
+            data: {}
 mode: single
