@@ -1,0 +1,33 @@
+alias: Weer info 's ochtends
+description: ""
+trigger: []
+condition:
+  - condition: state
+    entity_id: input_boolean.weer_info_ochtend
+    state: "on"
+action:
+  - service: tts.google_translate_say
+    data:
+      cache: true
+      language: nl
+      entity_id: media_player.sonos_keuken
+      message: >-
+        {% set state = states('weather.forecast_thuis') %} {% set temperature
+        =     state_attr('weather.forecast_thuis' , 'temperature') %} {% set
+        humidity =     state_attr('weather.forecast_thuis' , 'humidity') %} {%
+        set windspeed =     state_attr('weather.forecast_thuis' , 'wind_speed')
+        %} {% set cloud_coverage     = state_attr('weather.forecast_thuis' ,
+        'cloud_coverage') %} {% set rain =    
+        state_attr('weather.forecast_thuis' ,    
+        'forecast').0.precipitation_probability %} {% if state == 'partlycloudy'
+        %}       {% set state = 'Partly Cloudy' %}     {% endif %} Goedemorgen!
+        Het ziet er naar uit dat het vandaag {{state}} weer is, met een
+        temperatuur van {{temperature}} graden, luchtvochtigheid van
+        {{humidity}}%, windsnelheid van {{windspeed}} kilometer per uur, cloud
+        coverage of {{cloud_coverage}}, and {{rain}}% chance for rain. Have a
+        wonderful day!
+  - service: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.weer_info_ochtend
+    data: {}
+mode: single
