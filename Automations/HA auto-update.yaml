@@ -1,0 +1,13 @@
+alias: " HA auto-update"
+description: ""
+use_blueprint:
+  path: edwardtfn/auto_update_scheduled.yaml
+  input:
+    actions_pre_restart:
+      - service: notify.mobile_app_sm_g998b
+        data:
+          message: Home Assistant update wordt gestart
+    actions_pos_update:
+      - service: notify.mobile_app_sm_g998b
+        data:
+          message: Home Assistant update is afgerond
