@@ -24,20 +24,19 @@ action:
           - condition: trigger
             id:
               - Motion detected
-          - condition: state
-            entity_id: sun.sun
-            state: below_horizon
           - condition: and
             conditions:
               - condition: time
                 after: "16:00:00"
                 before: "23:00:00"
+              - condition: sun
+                after: sunset
+                after_offset: "-00:20:00"
         sequence:
           - service: light.turn_on
+            data: {}
             target:
               entity_id: light.lampen_hal
-            data:
-              brightness_pct: 55
       - conditions:
           - condition: trigger
             id:
@@ -66,40 +65,41 @@ action:
                   - fri
                 before: "09:00:00"
         sequence:
-          - service: light.turn_on
-            data:
-              brightness_pct: 1
-            target:
-              entity_id: light.hue_white_lamp_1_3
+          - type: turn_on
+            device_id: fd6a27ea1a27a24bffbc0db0a1889659
+            entity_id: 49de623ef58c7bfe7a5111c226d128a7
+            domain: light
+            brightness_pct: 5
       - conditions:
           - condition: trigger
             id:
               - Motion detected
           - condition: time
             after: "23:00:00"
-            before: "01:00:00"
+            before: "01:30:00"
             weekday:
               - fri
               - sat
               - sun
         sequence:
-          - service: light.turn_on
-            target:
-              entity_id: light.hue_white_lamp_1_3
-            data: {}
+          - type: turn_on
+            device_id: fd6a27ea1a27a24bffbc0db0a1889659
+            entity_id: 49de623ef58c7bfe7a5111c226d128a7
+            domain: light
+            brightness_pct: 5
       - conditions:
           - condition: trigger
             id:
               - Motion detected
           - condition: numeric_state
             entity_id: sensor.motion_hal_licht
-            below: 8
+            below: 9
           - condition: time
-            after: "11:00:00"
-            before: "16:45:00"
+            after: "10:00:00"
+            before: "19:00:00"
         sequence:
           - service: light.turn_on
             target:
-              area_id: hal
+              entity_id: light.lampen_hal
             data: {}
 mode: single
