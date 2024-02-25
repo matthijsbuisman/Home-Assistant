@@ -1,20 +1,27 @@
-kiosk_mode:
-hide_header: true
 views:
   - title: Home
     cards:
       - type: custom:mushroom-chips-card
         chips:
+          - type: menu
+          - type: alarm-control-panel
+            entity: alarm_control_panel.alarmo
           - type: weather
-            entity: weather.forecast_thuis
+            entity: weather.buienradar
             show_conditions: true
             show_temperature: true
+            tap_action:
+              action: more-info
           - type: entity
             entity: sensor.count_lights_when_on
             name: Lights
             icon: mdi:lightbulb
             icon_color: amber
             use_entity_picture: false
+          - type: action
+            tap_action:
+              action: navigate
+              navigation_path: /hassio
         alignment: center
       - type: custom:mushroom-template-card
         primary: |-
@@ -59,6 +66,16 @@ views:
               action: navigate
               navigation_path: motion
             icon_color: red
+          - type: custom:mushroom-template-card
+            primary: Security
+            secondary: ''
+            icon: mdi:shield-home
+            icon_color: green
+            badge_icon: ''
+            tap_action:
+              action: navigate
+              navigation_path: security
+            layout: vertical
       - type: horizontal-stack
         cards:
           - type: custom:mushroom-person-card
@@ -131,6 +148,14 @@ views:
             hold_action:
               action: toggle
             icon_color: amber
+          - type: custom:mushroom-template-card
+            primary: Buiten
+            secondary: '{{ states(''sensor.temperatuur'') }}°C'
+            icon: mdi:weather-sunny
+            tap_action:
+              action: navigate
+              navigation_path: buiten
+            entity: weather.buienradar
       - type: custom:mini-media-player
         entity: media_player.sonos_keuken
         volume_stateless: false
@@ -340,3 +365,59 @@ views:
           - type: custom:mushroom-entity-card
             entity: sensor.tz1800_fcdjzz3s_ty0202_batterij
             name: Batterij
+  - title: Thuis
+    path: thuis
+    badges: []
+    cards: []
+  - title: Security
+    path: security
+    badges: []
+    cards:
+      - type: custom:mushroom-chips-card
+        chips:
+          - type: back
+      - type: custom:mushroom-alarm-control-panel-card
+        entity: alarm_control_panel.alarmo
+        states:
+          - armed_home
+          - armed_away
+        name: Alarm
+        show_keypad: false
+  - title: Buiten
+    path: buiten
+    icon: ''
+    badges: []
+    cards:
+      - type: custom:mushroom-chips-card
+        chips:
+          - type: back
+      - show_state: true
+        show_name: true
+        camera_view: auto
+        type: picture-entity
+        image: https://demo.home-assistant.io/stub_config/bedroom.png
+        entity: camera.buienradar
+        name: Buienradar
+        camera_image: camera.buienradar
+      - show_current: true
+        show_forecast: true
+        type: weather-forecast
+        entity: weather.buienradar
+        forecast_type: daily
+        name: Weersverwachting
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: sensor.gevoelstemperatuur
+            name: Gevoelstemperatuur
+          - type: custom:mushroom-entity-card
+            entity: sensor.windkracht
+            name: Windkracht
+      - type: horizontal-stack
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: sensor.windsnelheid
+            name: Windsnelheid
+          - type: custom:mushroom-entity-card
+            entity: sensor.luchtvochtigheid
+            name: Luchtvochtigheid
