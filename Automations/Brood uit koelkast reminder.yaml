@@ -1,0 +1,14 @@
+alias: Brood uit koelkast reminder
+description: ""
+trigger:
+  - platform: time
+    at: "06:22:00"
+condition: []
+action:
+  - service: tts.google_translate_say
+    metadata: {}
+    data:
+      cache: false
+      entity_id: media_player.sonos_keuken
+      message: Don't forget to take your sandwiches out of the fridge
+mode: single
