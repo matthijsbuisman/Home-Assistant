@@ -1,0 +1,24 @@
+alias: Alles uit wanneer we van huis gaan
+description: ""
+trigger:
+  - platform: state
+    entity_id:
+      - zone.home
+    to: "0"
+condition: []
+action:
+  - service: light.turn_off
+    data: {}
+    target:
+      area_id: woonkamer
+  - service: media_player.media_stop
+    target:
+      entity_id:
+        - media_player.sonos_keuken
+        - media_player.sonos_woonkamer
+    data: {}
+  - service: light.turn_off
+    target:
+      area_id: slaapkamer
+    data: {}
+mode: single
