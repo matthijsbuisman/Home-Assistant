@@ -1,0 +1,111 @@
+alias: Planten (mi flora)
+description: ""
+triggers:
+  - trigger: numeric_state
+    entity_id:
+      - sensor.plant_sensor_strelizia_moisture
+    below: 18
+    id: Water geven strelitzia
+  - trigger: numeric_state
+    entity_id:
+      - sensor.plant_sensor_calathea_moisture
+    below: 18
+    id: Water geven Calathea
+conditions: []
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id:
+              - Water geven strelitzia
+        sequence:
+          - action: notify.mobile_app_samsung_van_matthijs
+            metadata: {}
+            data:
+              message: De strelizia heeft water nodig.
+              title: Planten
+          - action: notify.mobile_app_telefoon_van_fleur
+            metadata: {}
+            data:
+              message: De strelizia heeft wat water nodig.
+              title: Planten
+      - conditions:
+          - condition: trigger
+            id:
+              - Water geven Calathea
+        sequence:
+          - action: notify.mobile_app_samsung_van_matthijs
+            metadata: {}
+            data:
+              title: Planten
+              message: De calathea heeft water nodig.
+          - action: notify.mobile_app_telefoon_van_fleur
+            metadata: {}
+            data:
+              title: Planten
+              message: De Calathea heeft water nodig.
+      - conditions:
+          - condition: trigger
+            id:
+              - Water geven strelitzia
+          - condition: numeric_state
+            entity_id: zone.home
+            above: 0
+        sequence:
+          - action: sonos.snapshot
+            metadata: {}
+            data:
+              with_group: true
+              entity_id: media_player.sonos_keuken
+          - action: media_player.join
+            metadata: {}
+            data: {}
+            target:
+              area_id:
+                - keuken
+                - woonkamer
+          - action: tts.google_translate_say
+            metadata: {}
+            data:
+              cache: false
+              entity_id: media_player.sonos_keuken
+              message: De Strelitzia heeft water nodig.
+              language: nl
+          - action: sonos.restore
+            metadata: {}
+            data:
+              with_group: true
+              entity_id: media_player.sonos_keuken
+      - conditions:
+          - condition: trigger
+            id:
+              - Water geven Calathea
+          - condition: numeric_state
+            entity_id: zone.home
+            above: 0
+        sequence:
+          - action: sonos.snapshot
+            metadata: {}
+            data:
+              with_group: true
+              entity_id: media_player.sonos_keuken
+          - action: media_player.join
+            metadata: {}
+            data: {}
+            target:
+              area_id:
+                - keuken
+                - woonkamer
+          - action: tts.google_translate_say
+            metadata: {}
+            data:
+              cache: false
+              entity_id: media_player.sonos_keuken
+              message: De Calathea heeft water nodig.
+              language: nl
+          - action: sonos.restore
+            metadata: {}
+            data:
+              with_group: true
+              entity_id: media_player.sonos_keuken
+mode: single
