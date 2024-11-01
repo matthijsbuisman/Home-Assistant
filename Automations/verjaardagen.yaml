@@ -1,0 +1,20 @@
+alias: Verjaardagen
+description: ""
+mode: single
+triggers:
+  - entity_id: calendar.anniversaries
+    event: start
+    offset: "0:0:0"
+    trigger: calendar
+conditions: []
+actions:
+  - action: notify.mobile_app_samsung_van_matthijs
+    metadata: {}
+    data:
+      title: Verjaardag
+      message: Vandaag is {{ trigger.calendar_event.summary }} jarig!
+  - action: notify.mobile_app_telefoon_van_fleur
+    metadata: {}
+    data:
+      title: Verjaardag
+      message: Vandaag is {{ trigger.calendar_event.summary }} jarig!
