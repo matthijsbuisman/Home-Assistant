@@ -1,0 +1,29 @@
+type: custom:mushroom-template-card
+primary: |
+  {% if states.calendar.matthijsbuisman_hotmail_com.attributes.start_time %}
+    {{ states.calendar.matthijsbuisman_hotmail_com.attributes.message }}
+  {% else %}
+    Geen geplande evenementen
+  {% endif %}
+icon: mdi:calendar
+entity: calendar.matthijsbuisman_hotmail_com
+secondary: |
+  {% if states.calendar.matthijsbuisman_hotmail_com.attributes.start_time %}
+    {{ states.calendar.matthijsbuisman_hotmail_com.attributes.start_time | as_timestamp | timestamp_custom('%d-%m-%Y %H:%M') }} - {{ states.calendar.matthijsbuisman_hotmail_com.attributes.end_time | as_timestamp | timestamp_custom('%H:%M') }}
+  {% endif %}
+multiline_secondary: false
+tap_action:
+  action: navigate
+  navigation_path: /calendar
+card_mod:
+  style: |
+    ha-card {
+      display:
+        {% set event_start = as_timestamp(states.calendar.matthijsbuisman_hotmail_com.attributes.start_time) %}
+        {% set current_date = as_timestamp(states('input_datetime.huidige_datum')) %}
+        {% if (event_start - current_date) < 86400 and (event_start - current_date) >= 0 %}
+          block;
+        {% else %}
+          none;
+        {% endif %}
+    }
