@@ -1,0 +1,25 @@
+{%- set days_to_show = 10 %}
+{%-set ns = namespace(a=[], message=[]) %}
+{%- for item in expand(integration_entities('anniversaries'))
+  | selectattr('domain', 'eq', 'sensor')
+%}
+  {%- set d_h = item.attributes.get('days_until_half_anniversary', 999) %}
+  {%- set h = d_h < item.state | int %}
+  {%- set d = [item.state | int, d_h] | min %}
+  {%- set c = item.attributes.get('current_years') %}
+  {%- set y = c if c else none %}
+  {%- set y = y + (0.5 if h else 1 if d != 0 else 0) if y is not none %}
+  {%- set ns.a = ns.a + [ dict(n=item.name, d=d, y=y, h=h)] %}
+{%- endfor %}
+{%- for item in ns.a | sort(attribute='d') -%}
+  {%- set n, d, y = item.n, item.d, item.y %}
+              {%- if d <= 1 %}
+      {%- set ns.message = ns.message + [[' Vandaag: ', ' Morgen '][d] ~ n ~ ((' (' ~ y ~ ' jaar)') if y)] %}
+  {%- elif d % 7 == 0 and d <= days_to_show %}
+    {%- set w = (d / 7) | int %}
+      {%- set ns.message = ns.message + [' Over ' ~ w ~ (' week ' if w == 1 else ' weken ') ~ ': ' ~ n ~ ((' (' ~ y ~ ' jaar)') if y)] %}
+  {%- elif d <= days_to_show %}
+      {%- set ns.message = ns.message + [' Over ' ~ d ~ ' dagen' ~': ' ~ n ~ ((' (' ~ y ~ ' jaar)') if y)] %}
+  {%- endif %}
+{%- endfor %}
+{{ ns.message | join('\n') }}
