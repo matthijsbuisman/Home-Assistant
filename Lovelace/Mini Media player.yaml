@@ -1,5 +1,5 @@
 type: custom:mini-media-player
-entity: media_player.sonos_keuken
+entity: media_player.sonos_group
 volume_stateless: false
 toggle_power: true
 artwork: full-cover
@@ -9,6 +9,20 @@ info: scroll
 background: /local/Radio/icon_sonos.jpg
 shortcuts:
   columns: 3
+  label: Spotify playlists
+  list:
+    - type: script
+      id: script.media_spotify_ibiza_2024
+      name: IBIZA Summer Mix 2024
+    - type: script
+      id: script.timmy_trumpet_tomorrowland_2024
+      name: Timmy Trumpet Tomorrowland 2024
+    - type: script
+      id: script.media_play_360_dance
+      name: 360 Dance
+    - type: script
+      id: script.media_play_oldies
+      name: Oldies
   buttons:
     - type: script
       cover: /local/Radio/icon_538.jpg
@@ -19,3 +33,13 @@ shortcuts:
     - type: script
       cover: /local/Radio/icon_100nl.jpeg
       id: script.media_play_100_nl
+    - type: script
+      cover: /local/Radio/icon_radio10.gif
+      id: script.media_play_radio_10_non_stop
+    - type: script
+      cover: /local/Radio/icon_realhardstyle.jpg
+      id: script.media_play_hardstyle_fm
+    - type: script
+      cover: /local/Radio/icon_sublime.gif
+      id: script.media_play_sublime
+
