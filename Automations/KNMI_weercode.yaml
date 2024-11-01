@@ -1,0 +1,64 @@
+alias: KNMI weercode
+description: Geeft melding wanneer weercode veranderd naar geel, oranje of rood
+triggers:
+  - entity_id:
+      - sensor.knmi_weercode
+    to:
+      - geel
+      - oranje
+      - rood
+    trigger: state
+conditions:
+  - condition: or
+    conditions:
+      - condition: state
+        entity_id: person.matthijs
+        state: home
+      - condition: state
+        entity_id: person.fleur
+        state: home
+actions:
+  - data:
+      with_group: true
+      entity_id: media_player.sonos_keuken
+    action: sonos.snapshot
+  - metadata: {}
+    data:
+      volume_level: 0.4
+    target:
+      device_id: 12c27fd464189ea8a982c7f6717bc78f
+    action: media_player.volume_set
+  - metadata: {}
+    data:
+      volume_level: 0.4
+    target:
+      device_id: bf95a24944350c43f307e08e4b4ed465
+    action: media_player.volume_set
+  - action: media_player.volume_set
+    metadata: {}
+    data:
+      volume_level: 0.4
+    target:
+      device_id: 2fd804bee45e4ee55a7edc637f347eba
+  - metadata: {}
+    data:
+      group_members:
+        - media_player.sonos_keuken
+        - media_player.sonos_woonkamer
+        - media_player.sonos_symfonisk
+    target:
+      area_id:
+        - keuken
+        - woonkamer
+    action: media_player.join
+  - data:
+      cache: false
+      entity_id: media_player.sonos_keuken
+      message: Let op. Code {{ states('sensor.knmi_weercode') }} van kracht!
+      language: nl
+    action: tts.google_translate_say
+  - data:
+      with_group: true
+      entity_id: media_player.sonos_keuken
+    action: sonos.restore
+mode: single
