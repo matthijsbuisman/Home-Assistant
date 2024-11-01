@@ -1,18 +1,33 @@
 type: custom:sonos-card
-resources:
-  - url: /local/custom-sonos-card.js?v=1.0
-    type: module
 sections:
-  - player
   - volumes
-  - media browser
+  - player
   - grouping
-  - groups
-showVolumeUpAndDownButtons: true
-widthPercentage: 100
-title: Sonos
-mediaBrowserItemsPerRow: 5
-heightPercentage: 70
-entities:
-  - media_player.sonos_woonkamer
-  - media_player.sonos_keuken
+predefinedGroups:
+  - name: All
+    media: ""
+    entities:
+      - player: media_player.sonos_keuken
+      - player: media_player.sonos_woonkamer
+      - player: media_player.sonos_symfonisk
+  - name: Keuken
+    media: ""
+    entities:
+      - player: media_player.sonos_keuken
+        volume: 14
+  - name: Woonkamer
+    media: ""
+    entities:
+      - player: media_player.sonos_woonkamer
+        volume: 14
+  - name: Office
+    media: ""
+    entities:
+      - player: media_player.sonos_symfonisk
+        volume: 14
+  - name: Keuken + Woonkamer
+    entities:
+      - player: media_player.sonos_keuken
+        volume: 14
+      - player: media_player.sonos_woonkamer
+        volume: 14
