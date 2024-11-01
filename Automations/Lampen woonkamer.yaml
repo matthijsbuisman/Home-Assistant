@@ -1,125 +1,52 @@
 alias: Lampen woonkamer aan/uit
 description: ""
-trigger:
-  - platform: sun
-    event: sunset
+triggers:
+  - event: sunset
     offset: "- 00:20:00"
     id: Zon gaat onder
-  - type: opened
-    platform: device
-    device_id: b9bff415c0827f65e3a3723d11b03c16
-    entity_id: c642e357c2ccd1397779571c668eabf2
-    domain: binary_sensor
-    id: Deur wordt geopend
-  - type: motion
-    platform: device
-    device_id: dca3ebd4a90695a608ea9a5402cbb7bc
-    entity_id: d8a65a72adc94a411df97899b9521188
-    domain: binary_sensor
-    id: Motion slaapkamer
-condition:
-  - condition: numeric_state
-    entity_id: zone.home
-    above: 0
-action:
+    trigger: sun
+  - entity_id:
+      - zone.home
+    from: "0"
+    id: Thuiskomen
+    trigger: state
+conditions: []
+actions:
   - choose:
       - conditions:
           - condition: trigger
             id:
               - Zon gaat onder
-          - condition: or
-            conditions:
-              - condition: state
-                entity_id: person.fleur
-                state: home
-              - condition: state
-                entity_id: person.matthijs
-                state: home
+          - condition: numeric_state
+            entity_id: zone.home
+            above: 0
         sequence:
-          - service: light.turn_on
+          - target:
+              device_id:
+                - 999ffc9b7c11eaa884b98454bdb9b248
+                - 76e044d807f549f31c91d9a37ee294eb
+                - 4253b06aa7efdb084156487f007089d2
             data: {}
-            target:
-              entity_id:
-                - light.lamp_naast_tv_schakelaar
-                - light.woonkamer
+            action: light.turn_on
       - conditions:
           - condition: trigger
             id:
-              - Deur wordt geopend
-          - condition: time
-            before: "21:21:00"
-            after: "17:00:00"
-            weekday:
-              - sun
-              - mon
-              - tue
-              - wed
-              - thu
-          - condition: sun
-            after: sunset
-            after_offset: "-00:20:00"
-        sequence:
-          - service: light.turn_on
-            target:
-              area_id: woonkamer
-            data: {}
-      - conditions:
-          - condition: trigger
-            id:
-              - Motion slaapkamer
-          - condition: time
-            after: "22:05:00"
-            before: "09:00:00"
-            weekday:
-              - sun
-              - mon
-              - tue
-              - wed
-              - thu
-        sequence:
-          - service: light.turn_off
-            target:
-              area_id: woonkamer
-            data: {}
-          - type: turn_off
-            device_id: 4253b06aa7efdb084156487f007089d2
-            entity_id: 7188ec342a82813923a023e9bbbe9f26
-            domain: switch
-      - conditions:
-          - condition: trigger
-            id:
-              - Motion slaapkamer
-          - condition: time
-            after: "00:00:00"
-            before: "09:00:00"
-            weekday:
-              - sat
-              - sun
-        sequence:
-          - service: light.turn_off
-            target:
-              area_id: woonkamer
-            data: {}
-          - type: turn_off
-            device_id: 4253b06aa7efdb084156487f007089d2
-            entity_id: 7188ec342a82813923a023e9bbbe9f26
-            domain: switch
-      - conditions:
-          - condition: trigger
-            id:
-              - Deur wordt geopend
-          - condition: time
-            after: "16:00:00"
-            before: "23:00:00"
-            weekday:
-              - fri
-              - sat
+              - Thuiskomen
           - condition: state
             entity_id: sun.sun
             state: below_horizon
+            for:
+              hours: 0
+              minutes: 0
+              seconds: 0
+          - condition: time
+            before: "23:00:00"
         sequence:
-          - service: light.turn_on
-            target:
-              area_id: woonkamer
+          - target:
+              device_id:
+                - 999ffc9b7c11eaa884b98454bdb9b248
+                - 76e044d807f549f31c91d9a37ee294eb
+                - 4253b06aa7efdb084156487f007089d2
             data: {}
+            action: light.turn_on
 mode: single
