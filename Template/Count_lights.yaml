@@ -1,0 +1,5 @@
+{% set ns = namespace(res=0) %}
+{% for light in state_attr('light.all_lights', 'entity_id') if is_state(light, 'on') %}
+  {% set ns.res = ns.res + 1 %}
+{%endfor%}
+{{ ns.res }}
