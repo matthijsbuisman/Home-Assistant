@@ -1,0 +1,20 @@
+type: custom:atomic-calendar-revive
+enableModeChange: true
+entities:
+  - entity: calendar.matthijsbuisman_hotmail_com
+    name: Matthijsbuisman@hotmail.com
+    showMultiDay: true
+    maxDaysToShow: 7
+    icon: "mdi: calendar"
+dimFinishedEvents: false
+showCalendarName: false
+showWeekNumber: false
+showEventDate: true
+showAllDayHours: false
+hoursOnSameLine: false
+showProgressBar: true
+showCurrentEventLine: false
+showMonth: false
+noEventsForNextDaysText: Geen evenementen de komende dagen
+dateFormat: LL
+firstDayOfWeek: 1
